@@ -3,6 +3,7 @@ package com.github.jreddit.utils.restclient;
 import com.github.jreddit.utils.ApiEndpointUtils;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpGetMethodBuilder;
 import com.github.jreddit.utils.restclient.methodbuilders.HttpPostMethodBuilder;
+
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -34,7 +35,12 @@ public class HttpRestClient implements RestClient {
             .build();
     private String userAgent = "Omer's Reddit API Java Wrapper";
 
-    public HttpRestClient() {
+    public HttpRestClient(String clientName, String clientVersion) {
+        this();
+        this.userAgent = clientName + "/" + clientVersion;
+    }
+
+    private HttpRestClient() {
         // As we're currently managing cookies elsewhere we need to set our config to ignore them
         this.httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(globalConfig)
