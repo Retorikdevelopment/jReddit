@@ -2,6 +2,7 @@ package com.github.jreddit.submissions;
 
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.restclient.RestClient;
+
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,9 +42,8 @@ public class SubmissionTest {
 
     @Test
     public void markNSFW() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, false), restClient);
         underTest.setUser(user);
-        underTest.setRestClient(restClient);
         underTest.markNSFW();
 
         verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH, SUBMISSION_MARK_AS_NSFW, COOKIE);
@@ -51,9 +51,8 @@ public class SubmissionTest {
 
     @Test
     public void unmarkNSFW() throws IOException, ParseException {
-        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, true));
+        underTest = new Submission(createSubmission(REDDIT_OBJ_ID, true), restClient);
         underTest.setUser(user);
-        underTest.setRestClient(restClient);
         underTest.unmarkNSFW();
 
         verify(restClient).post("id=" + REDDIT_OBJ_ID + "&uh=" + MOD_HASH, SUBMISSION_UNMARK_AS_NSFW, COOKIE);
