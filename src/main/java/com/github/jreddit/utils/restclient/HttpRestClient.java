@@ -86,7 +86,7 @@ public class HttpRestClient implements RestClient {
 
     public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException {
         if (userAgent == null)
-            throw new IllegalStateException("Useragent not set");
+            throw new IllegalStateException("UserAgent not set");
         getMethodBuilder.withUserAgent(userAgent);
         HttpGet request = getMethodBuilder.build();
         return httpClient.execute(request, responseHandler);
