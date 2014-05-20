@@ -4,8 +4,8 @@ import com.github.jreddit.Thing;
 import com.github.jreddit.exception.InvalidCookieException;
 import com.github.jreddit.user.User;
 import com.github.jreddit.utils.ApiEndpointUtils;
-import com.github.jreddit.utils.restclient.HttpRestClient;
 import com.github.jreddit.utils.restclient.RestClient;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -39,8 +39,8 @@ public class Submission extends Thing {
     private long downVotes;
     private long score;
 
-    public Submission() {
-        restClient = new HttpRestClient();
+    public Submission(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     /**
@@ -48,7 +48,7 @@ public class Submission extends Thing {
      *
      * @param obj The JSONObject to load Submission data from
      */
-    public Submission(JSONObject obj) {
+    public Submission(JSONObject obj, RestClient restClient) {
 
         try {
             setAuthor((String) obj.get("author"));
@@ -64,7 +64,7 @@ public class Submission extends Thing {
         } catch (Exception e) {
             System.err.println("Error creating Submission");
         }
-        restClient = new HttpRestClient();
+        this.restClient = restClient;
     }
 
     // this is very stinky..
