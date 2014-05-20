@@ -44,7 +44,7 @@ public class HttpRestClient implements RestClient {
      */
     public HttpRestClient(String clientName, String clientVersion) {
         this();
-        this.userAgent = clientName + "/" + clientVersion;
+        setUserAgent(clientName, clientVersion);
     }
 
     private HttpRestClient() {
@@ -56,7 +56,8 @@ public class HttpRestClient implements RestClient {
     }
 
     /**
-     * Creates a HttpRestClient using the supplied parameters.
+     * Creates a HttpRestClient using the supplied parameters. Make sure to set userAgent
+     * after creation
      *
      * @param httpClient
      * @param responseHandler
@@ -124,9 +125,25 @@ public class HttpRestClient implements RestClient {
         return httpClient.execute(request, responseHandler);
     }
 
+    /**
+     * Sets the useragent. Make sure to include version number in the string or
+     * just use {@link #setUserAgent(String, String)} setUserAgent(String, String) }
+     *
+     * @param agent the string to be used as the userAgent
+     */
     @Override
     public void setUserAgent(String agent) {
         this.userAgent = agent;
+    }
+
+    /**
+     * Sets the userAgent according to the pattern clientName/clientVersion
+     *
+     * @param clientName
+     * @param clientVersion
+     */
+    public void setUserAgent(String clientName, String clientVersion) {
+        this.userAgent = clientName + "/" + clientVersion;
     }
 
     private List<NameValuePair> convertRequestStringToList(String apiParams) {
