@@ -33,8 +33,15 @@ public class HttpRestClient implements RestClient {
             .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
             .setConnectionRequestTimeout(10000)
             .build();
-    private String userAgent = "Omer's Reddit API Java Wrapper";
+    private String userAgent;
 
+    /**
+     * Creates a HttpRestClient and uses the parameters to build a useragent according to
+     * the pattern clientname/clientVersion
+     *
+     * @param clientName
+     * @param clientVersion
+     */
     public HttpRestClient(String clientName, String clientVersion) {
         this();
         this.userAgent = clientName + "/" + clientVersion;
@@ -48,6 +55,12 @@ public class HttpRestClient implements RestClient {
         this.responseHandler = new RestResponseHandler();
     }
 
+    /**
+     * Creates a HttpRestClient using the supplied parameters.
+     *
+     * @param httpClient
+     * @param responseHandler
+     */
     public HttpRestClient(HttpClient httpClient, ResponseHandler<Response> responseHandler) {
         this.httpClient = httpClient;
         this.responseHandler = responseHandler;
@@ -57,23 +70,22 @@ public class HttpRestClient implements RestClient {
     public Response get(String urlPath, String cookie) {
         try {
             return get(httpGetMethod()
-                    .withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
-                    .withCookie(cookie)
+                            .withUrl(ApiEndpointUtils.REDDIT_BASE_URL + urlPath)
+                            .withCookie(cookie)
             );
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             System.err.println("Error making creating URI bad path: " + urlPath);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("Error making GET request to URL path: " + urlPath);
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             System.err.println("Error parsing response from POST request for URL path: " + urlPath);
         }
         return null;
     }
 
     public Response get(HttpGetMethodBuilder getMethodBuilder) throws IOException, ParseException {
+        if (userAgent == null)
+            throw new IllegalStateException("Useragent not set");
         getMethodBuilder.withUserAgent(userAgent);
         HttpGet request = getMethodBuilder.build();
         return httpClient.execute(request, responseHandler);
@@ -88,14 +100,11 @@ public class HttpRestClient implements RestClient {
                             .withCookie(cookie),
                     convertRequestStringToList(apiParams)
             );
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             System.err.println("Error making creating URI bad path: " + urlPath);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("Error making GET request to URL path: " + urlPath);
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             System.err.println("Error parsing response from POST request for URL path: " + urlPath);
         }
         return null;
@@ -107,7 +116,8 @@ public class HttpRestClient implements RestClient {
 
     public Response post(HttpPostMethodBuilder postMethodBuilder, List<NameValuePair> params) throws IOException, ParseException {
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, Consts.UTF_8);
-
+        if (userAgent == null)
+            throw new IllegalStateException("Useragent not set");
         postMethodBuilder.withUserAgent(userAgent);
         HttpPost request = postMethodBuilder.build();
         request.setEntity(entity);
