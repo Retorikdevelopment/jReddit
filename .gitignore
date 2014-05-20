@@ -6,3 +6,4 @@ bin/
 *.iml
 lib/
 local.properties
+build.gradle
